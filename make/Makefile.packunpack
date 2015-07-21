@@ -1,0 +1,24 @@
+# Copyright (c) 2015 Mariusz Zaborski <oshogbo@FreeBSD.org>
+
+CC=		clang
+LIBS=		-lnv
+TARGET=		packunpack
+BINDIR=		bin
+SRCDIR=		src
+OBJDIR=		obj
+CPPFLAGS=	-Wall -Wextra #-I${SRCDIR}
+
+SRC=	packunpack.c
+SRC+=	test_common.c
+
+OBJ=$(addprefix ${OBJDIR}/, $(SRC:.c=.o))
+
+all: $(TARGET)
+
+${TARGET}: ${BINDIR}/${TARGET}
+
+${BINDIR}/$(TARGET): $(OBJ)
+	$(CC) -o $@ $(OBJ) $(LIBS)
+
+${OBJDIR}/%.o: ${SRCDIR}/%.c
+	$(CC) -c $(CPPFLAGS) -o $@ $<
