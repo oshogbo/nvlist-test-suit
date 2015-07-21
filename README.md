@@ -2,7 +2,7 @@
 
 This repository contains random based stress test for nvlist library in FreeBSD.
 
-# Compilation
+## Compilation
 
 $ gmake
 
