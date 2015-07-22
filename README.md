@@ -4,4 +4,4 @@ This repository contains random based stress test for nvlist library in FreeBSD.
 
 ## Compilation
 
-$ gmake [LIBNV=/path/to/the/libnv.a INCLIBNV=/path/to/includes/]
+$ gmake [LIBNV=/path/to/the/libnv.a] [INCLIBNV=/path/to/includes/] [CC=/path/to/the/afl-gcc]
