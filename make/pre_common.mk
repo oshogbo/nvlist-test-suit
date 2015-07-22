@@ -5,9 +5,9 @@
 LIBNV?=-lnv
 INCLIBNV?=/usr/local/include/sys
 
-CC=	clang
+CC=	atf-gcc
 LIBS=	${LIBNV}
 BINDIR=	bin
 SRCDIR=	src
 OBJDIR=	obj
-CFLAGS=	-Wall -Wextra -I${INCLIBNV}
+CFLAGS=	-Wall -Wextra -I${INCLIBNV} -ggdb
