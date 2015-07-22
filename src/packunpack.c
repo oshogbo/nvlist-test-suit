@@ -56,14 +56,10 @@ main(int argc, char **argv)
 		return (1);
 	}
 
-#if 0
-	nvlist_fdump(nvl, stdout);
-#endif
-
 	buf = nvlist_pack(nvl, &size);
 	if (buf == NULL) {
 		fprintf(stderr, "Unable to pack nvlist.\n");
-		return (1);
+		abort();
 	}
 	newnvl = nvlist_unpack(buf, size, 0);
 
@@ -76,12 +72,12 @@ main(int argc, char **argv)
 		    &newcookie)) != NULL) {
 			if (strcmp(name, newname) != 0) {
 				fprintf(stderr, "Names are diffrent.\n");
-				return (1);
+				abort();
 			}
 
 			if (type != newtype) {
 				fprintf(stderr, "Types are diffrent.\n");
-				return (1);
+				abort();
 			}
 
 			switch (type) {
@@ -89,21 +85,21 @@ main(int argc, char **argv)
 				if (nvlist_get_bool(pvl, name) !=
 				    nvlist_get_bool(newpvl, newname)) {
 					fprintf(stderr, "Bool check failed.\n");
-					return (1);
+					abort();
 				}
 				break;
 			case NV_TYPE_STRING:
 				if (strcmp(nvlist_get_string(pvl, name),
 				    nvlist_get_string(newpvl, newname)) != 0) {
 					fprintf(stderr, "String check failed.\n");
-					return (1);
+					abort();
 				}
 				break;
 			case NV_TYPE_NUMBER:
 				if (nvlist_get_number(pvl, name) !=
 				    nvlist_get_number(newpvl, newname)) {
 					fprintf(stderr, "Number check failed.\n");
-					return (1);
+					abort();
 				}
 				break;
 			case NV_TYPE_NVLIST:
@@ -111,7 +107,7 @@ main(int argc, char **argv)
 				newpvl = nvlist_get_nvlist(newpvl, newname);
 				if (pvl == NULL || newpvl == NULL) {
 					fprintf(stderr, "Nvlist check failed.\n");
-					return (1);
+					abort();
 				}
 				cookie = NULL;
 				newcookie = NULL;
@@ -122,25 +118,25 @@ main(int argc, char **argv)
 		}
 		if (name != NULL && newname != NULL) {
 			fprintf(stderr, "Unapacked nvlist is diffrent then orginal.\n");
-			return (1);
+			abort();
 		}
 	} while ((pvl = nvlist_get_parent(pvl, &cookie)) != NULL &&
 		(newpvl = nvlist_get_parent(newpvl, &newcookie)) != NULL);
 
 	if (pvl != NULL && newpvl != NULL) {
 		fprintf(stderr, "Unapacked nvlist is diffrent then orginal.\n");
-		return (1);
+		abort();
 	}
 
 	newbuf = nvlist_pack(newnvl, &newsize);
 	if (newsize != size) {
 		fprintf(stderr, "Size is not deterministic.\n");
-		return (1);
+		abort();
 	}
 
 	if (memcmp(newbuf, buf, size) != 0) {
 		fprintf(stderr, "Pack is not deterministic.\n");
-		return (1);
+		abort();
 	}
 
 	nvlist_destroy(nvl);
