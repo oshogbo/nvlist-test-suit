@@ -4,7 +4,7 @@
 
 include make/pre_common.mk
 
-TARGET=		unpack
+TARGET=	unpack
 
 SRC=	unpack.c
 

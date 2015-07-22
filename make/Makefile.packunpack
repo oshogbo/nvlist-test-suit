@@ -4,7 +4,7 @@
 
 include make/pre_common.mk
 
-TARGET=		packunpack
+TARGET=	packunpack
 
 SRC=	packunpack.c
 SRC+=	test_common.c
