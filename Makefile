@@ -4,11 +4,12 @@
 
 include make/pre_common.mk
 
-PROGS=	packunpack
+PROGS=	libnv
+PROGS+=	packunpack
 PROGS+=	genafldata
 PROGS+=	unpack
 
-.PHONY: ${PROGS} clear
+.PHONY: ${PROGS} clean
 
 all: ${PROGS}
 

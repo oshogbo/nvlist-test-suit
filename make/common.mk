@@ -2,6 +2,8 @@
 # Copyright (c) 2015 Mariusz Zaborski <oshogbo@FreeBSD.org>
 #
 
+include make/nvlistfiles.mk
+
 OBJ=$(addprefix ${OBJDIR}/, $(SRC:.c=.o))
 
 all: $(TARGET)
@@ -9,7 +11,7 @@ all: $(TARGET)
 ${TARGET}: ${BINDIR}/${TARGET}
 
 ${BINDIR}/$(TARGET): $(OBJ)
-	$(CC) -o $@ $(OBJ) $(LIBS)
+	$(CC) -o $@ $(OBJ) $(NVLISTOBJ) $(LIBS)
 
 ${OBJDIR}/%.o: ${SRCDIR}/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
