@@ -18,7 +18,7 @@ fi
 i=0
 while [ ${i} -ne ${3} ]; do
 	nr=$(jot -r 1 "${1}" "${2}")
-	echo "${i} of ${3}, number of elemetns ${nr}..."
+	echo "${i} of ${3}, number of elements ${nr}..."
 
 	./${PROG} ${nr}
 	if [ $? -ne 0 ]; then
