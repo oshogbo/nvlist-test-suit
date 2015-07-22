@@ -11,7 +11,7 @@ if [ \! -x "${PROG}" ]; then
 fi
 
 if [ $# -ne 3 ]; then
-	echo "Usage: ./$0 [min-nvlist-size] [max-nvlist-size] [count]" >&2
+	echo "Usage: $0 [min-nvlist-size] [max-nvlist-size] [count]" >&2
 	exit 1
 fi
 
