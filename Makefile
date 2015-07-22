@@ -1,4 +1,14 @@
+#
 # Copyright (c) 2015 Mariusz Zaborski <oshogbo@FreeBSD.org>
+#
 
-all:
-	$(MAKE) -f make/Makefile.packunpack
+PROGS=	packunpack
+
+.PHONY: ${PROGS}
+
+all: ${PROGS}
+
+${PROGS}:
+	$(MAKE) -f make/Makefile.$@
+
+
