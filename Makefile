@@ -9,7 +9,7 @@ PROGS+=	packunpack
 PROGS+=	genafldata
 PROGS+=	unpack
 
-.PHONY: ${PROGS} clean
+.PHONY: ${PROGS} clean allclean
 
 all: ${PROGS}
 
@@ -19,4 +19,7 @@ ${PROGS}:
 clean:
 	rm -f $(addprefix ${BINDIR}/, $(PROGS))
 	rm -f ${OBJDIR}/*.o
+
+allclean: clean
+	rm -fR aflresult/*
 	rm -f testdata/nvlist.*
