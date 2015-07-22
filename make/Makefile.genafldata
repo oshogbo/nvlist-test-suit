@@ -1,0 +1,12 @@
+#
+# Copyright (c) 2015 Mariusz Zaborski <oshogbo@FreeBSD.org>
+#
+
+include make/pre_common.mk
+
+TARGET=		genafldata
+
+SRC=	genafldata.c
+SRC+=	test_common.c
+
+include make/common.mk
