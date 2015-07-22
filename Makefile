@@ -3,6 +3,8 @@
 #
 
 PROGS=	packunpack
+PROGS+=	genafldata
+PROGS+=	unpack
 
 .PHONY: ${PROGS}
 
