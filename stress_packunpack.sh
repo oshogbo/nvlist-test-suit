@@ -17,7 +17,10 @@ fi
 
 i=0
 while [ ${i} -ne ${3} ]; do
-	./${PROG} `jot -r 1 "${1}" "${2}"`
+	nr=$(jot -r 1 "${1}" "${2}")
+	echo "${i} of ${3}, number of elemetns ${nr}..."
+
+	./${PROG} ${nr}
 	if [ $? -ne 0 ]; then
 		echo "Error detected."
 		exit 1
