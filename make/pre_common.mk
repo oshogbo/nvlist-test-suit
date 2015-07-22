@@ -4,11 +4,11 @@
 
 LIBNV?=/usr/src/lib/libnv
 LIBNVCONTRIB?=/usr/src/sys/contrib/libnv
-INCLIBNV?=/usr/include
+INC?=/usr/include
 
 CC=	atf-gcc
 LIBS=
 BINDIR=	bin
 SRCDIR=	src
 OBJDIR=	obj
-CFLAGS=	-Wall -Wextra -I${INCLIBNV} -I${INCLIBNV}/sys
+CFLAGS=	-Wall -Wextra -I${INC}
