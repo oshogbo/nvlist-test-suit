@@ -24,14 +24,14 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/nv.h>
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <uuid.h>
+
+#include <nv.h>
 
 enum nvtype {
 	NVLIST_BOOL,

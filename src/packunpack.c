@@ -24,10 +24,10 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/nv.h>
-
 #include <stdlib.h>
 #include <string.h>
+
+#include <nv.h>
 
 #include "test_common.h"
 

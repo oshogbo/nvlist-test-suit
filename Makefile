@@ -13,7 +13,7 @@ PROGS+=	unpack
 all: ${PROGS}
 
 ${PROGS}:
-	$(MAKE) -f make/Makefile.$@
+	$(MAKE) -f make/Makefile.$@ LIBNV=${LIBNV} INCLIBNV=${INCLIBNV}
 
 clean:
 	rm -f $(addprefix ${BINDIR}/, $(PROGS))

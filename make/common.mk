@@ -12,4 +12,4 @@ ${BINDIR}/$(TARGET): $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LIBS)
 
 ${OBJDIR}/%.o: ${SRCDIR}/%.c
-	$(CC) -c $(CPPFLAGS) -o $@ $<
+	$(CC) -c $(CFLAGS) -o $@ $<
