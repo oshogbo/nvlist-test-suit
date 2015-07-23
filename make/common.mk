@@ -6,11 +6,11 @@ include make/nvlistfiles.mk
 
 OBJ=$(addprefix ${OBJDIR}/, $(SRC:.c=.o))
 
-all: $(NVLISTOBJ) $(TARGET)
+all: $(TARGET)
 
 ${TARGET}: ${BINDIR}/${TARGET}
 
-${BINDIR}/$(TARGET): $(OBJ)
+${BINDIR}/$(TARGET): $(NVLISTOBJ) $(OBJ)
 	$(CC) -o $@ $(OBJ) $(NVLISTOBJ) $(LIBS) -ggdb
 
 ${OBJDIR}/%.o: ${SRCDIR}/%.c
