@@ -11,4 +11,4 @@ LIBS=
 BINDIR=	bin
 SRCDIR=	src
 OBJDIR=	obj
-CFLAGS=	-Wall -Wextra -I${INC}
+CFLAGS=	-Wall -Wextra -I${INC} -ggdb

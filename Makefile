@@ -4,8 +4,7 @@
 
 include make/pre_common.mk
 
-PROGS=	libnv
-PROGS+=	packunpack
+PROGS=	packunpack
 PROGS+=	genafldata
 PROGS+=	unpack
 
