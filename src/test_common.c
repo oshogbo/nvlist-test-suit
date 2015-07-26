@@ -39,6 +39,8 @@ enum nvtype {
 	NVLIST_STRING,
 	NVLIST_NVLIST,
 	NVLIST_UP,
+	NVLIST_NULL,
+	NVLIST_BINARY,
 	NVLIST_LAST
 };
 
@@ -115,6 +117,20 @@ generate_nvlist(unsigned int count)
 			    nvlist_get_parent(pvl, NULL));
 			if (old != NULL)
 				pvl = old;
+			break;
+		    }
+		case NVLIST_NULL:
+			nvlist_add_null(pvl, name);
+			break;
+		case NVLIST_BINARY:
+		    {
+			char *buf;
+
+			if (!generate_string(&buf))
+				goto err;
+			nvlist_add_binary(pvl, name, buf,
+			    (rand() % strlen(buf)) + 1);
+			free(buf);
 			break;
 		    }
 		default:

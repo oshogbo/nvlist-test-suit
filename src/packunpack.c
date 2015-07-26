@@ -112,6 +112,30 @@ main(int argc, char **argv)
 				cookie = NULL;
 				newcookie = NULL;
 				break;
+			case NV_TYPE_NULL:
+				if (!nvlist_exists_null(pvl, name) ||
+				    !nvlist_exists_null(newpvl, newname)) {
+					fprintf(stderr, "NULL check failed.\n");
+					abort();
+				}
+				break;
+			case NV_TYPE_BINARY:
+			    {
+				size_t spvl, snewpvl;
+				const void *buf, *newbuf;
+
+				buf = nvlist_get_binary(pvl, name, &spvl);
+				newbuf = nvlist_get_binary(newpvl, newname,
+				    &snewpvl);
+				if (spvl != snewpvl ||
+				    buf == NULL || newbuf == NULL ||
+				    memcmp(buf, newbuf, spvl) != 0) {
+					fprintf(stderr,
+					    "Binary check failed.\n");
+					abort();
+				}
+				break;
+			    }
 			default:
 				fprintf(stderr, "Unknown type.\n");
 			}
