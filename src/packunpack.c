@@ -130,10 +130,93 @@ main(int argc, char **argv)
 				if (spvl != snewpvl ||
 				    buf == NULL || newbuf == NULL ||
 				    memcmp(buf, newbuf, spvl) != 0) {
-					fprintf(stderr,
-					    "Binary check failed.\n");
+					fprintf(stderr, "Binary check failed.\n");
 					abort();
 				}
+				break;
+			    }
+			case NV_TYPE_BOOL_ARRAY:
+			    {
+				size_t size, newsize, i;
+				const bool *val, *newval;
+
+				val = nvlist_get_bool_array(pvl, name, &size);
+				newval = nvlist_get_bool_array(newpvl, newname,
+				    &newsize);
+				if (size != newsize) {
+					fprintf(stderr, "Bool array check failed.");
+					abort();
+				}
+				for (i = 0; i < size; i++) {
+					if (val[i] != newval[i]) {
+						fprintf(stderr, "Bool array check failed.");
+						abort();
+					}
+				}
+				break;
+			    }
+			case NV_TYPE_NUMBER_ARRAY:
+			    {
+				size_t size, newsize, i;
+				const uint64_t *val, *newval;
+
+				val = nvlist_get_number_array(pvl, name, &size);
+				newval = nvlist_get_number_array(newpvl,
+				    newname, &newsize);
+				if (size != newsize) {
+					fprintf(stderr, "Number array check failed.");
+					abort();
+				}
+				for (i = 0; i < size; i++) {
+					if (val[i] != newval[i]) {
+						fprintf(stderr, "Number array check failed.");
+						abort();
+					}
+				}
+				break;
+			    }
+			case NV_TYPE_STRING_ARRAY:
+			    {
+				size_t size, newsize, i;
+				const char * const *val;
+				const char * const *newval;
+
+				val = nvlist_get_string_array(pvl, name, &size);
+				newval = nvlist_get_string_array(newpvl,
+				    newname, &newsize);
+				if (size != newsize) {
+					fprintf(stderr, "String array check failed.");
+					abort();
+				}
+				for (i = 0; i < size; i++) {
+					if (strcmp(val[i], newval[i]) != 0) {
+						fprintf(stderr, "String number check failed.");
+						abort();
+					}
+				}
+				break;
+			    }
+			case NV_TYPE_NVLIST_ARRAY:
+			    {
+				size_t size, newsize;
+				const nvlist_t * const *val;
+				const nvlist_t * const *newval;
+
+				val = nvlist_get_nvlist_array(pvl, name, &size);
+				newval = nvlist_get_nvlist_array(newpvl,
+				    newname, &newsize);
+				if (size != newsize) {
+					fprintf(stderr, "Nvlist array check failed.");
+					abort();
+				}
+				if (pvl == NULL || newpvl == NULL) {
+					fprintf(stderr, "Nvlist array check failed.\n");
+					abort();
+				}
+				pvl = val[0];
+				newpvl = newval[0];
+				cookie = NULL;
+				newcookie = NULL;
 				break;
 			    }
 			default:
@@ -144,8 +227,8 @@ main(int argc, char **argv)
 			fprintf(stderr, "Unapacked nvlist is diffrent then orginal.\n");
 			abort();
 		}
-	} while ((pvl = nvlist_get_parent(pvl, &cookie)) != NULL &&
-		(newpvl = nvlist_get_parent(newpvl, &newcookie)) != NULL);
+	} while ((pvl = nvlist_get_pararr(pvl, &cookie)) != NULL &&
+		(newpvl = nvlist_get_pararr(newpvl, &newcookie)) != NULL);
 
 	if (pvl != NULL && newpvl != NULL) {
 		fprintf(stderr, "Unapacked nvlist is diffrent then orginal.\n");
