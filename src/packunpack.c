@@ -135,6 +135,7 @@ main(int argc, char **argv)
 				}
 				break;
 			    }
+#ifdef ARRAY_SUPPORT
 			case NV_TYPE_BOOL_ARRAY:
 			    {
 				size_t size, newsize, i;
@@ -219,6 +220,7 @@ main(int argc, char **argv)
 				newcookie = NULL;
 				break;
 			    }
+#endif	/* ARRAY_SUPPORT */
 			default:
 				fprintf(stderr, "Unknown type.\n");
 			}
@@ -227,8 +229,13 @@ main(int argc, char **argv)
 			fprintf(stderr, "Unapacked nvlist is diffrent then orginal.\n");
 			abort();
 		}
+#ifdef ARRAY_SUPPORT
 	} while ((pvl = nvlist_get_pararr(pvl, &cookie)) != NULL &&
 		(newpvl = nvlist_get_pararr(newpvl, &newcookie)) != NULL);
+#else
+	} while ((pvl = nvlist_get_parent(pvl, &cookie)) != NULL &&
+		(newpvl = nvlist_get_parent(newpvl, &newcookie)) != NULL);
+#endif	/* ARRAY_SUPPORT */
 
 	if (pvl != NULL && newpvl != NULL) {
 		fprintf(stderr, "Unapacked nvlist is diffrent then orginal.\n");

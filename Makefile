@@ -14,7 +14,8 @@ PROGS+=	unpack
 all: ${PROGS}
 
 ${PROGS}: ${NVLISTOBJ}
-	$(MAKE) -f make/Makefile.$@ LIBNV=${LIBNV} INC=${INC}
+	$(MAKE) -f make/Makefile.$@ LIBNV=${LIBNV} INC=${INC} \
+	    ARRAY_SUPPORT=${ARRAY_SUPPORT}
 
 clean:
 	rm -f $(addprefix ${BINDIR}/, $(PROGS))

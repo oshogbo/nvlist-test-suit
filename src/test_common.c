@@ -44,13 +44,16 @@ enum nvtype {
 	NVLIST_UP,
 	NVLIST_NULL,
 	NVLIST_BINARY,
+#ifdef ARRAY_SUPPORT
 	NVLIST_BOOL_ARRAY,
 	NVLIST_NUMBER_ARRAY,
 	NVLIST_STRING_ARRAY,
 	NVLIST_NVLIST_ARRAY,
+#endif	/* ARRAY_SUPPORT */
 	NVLIST_LAST
 };
 
+#ifdef ARRAY_SUPPORT
 static size_t
 array_elements_count(int maxcount)
 {
@@ -66,6 +69,7 @@ array_elements_count(int maxcount)
 		return (maxcount);
 	return (r);
 }
+#endif	/* ARRAY_SUPPORT */
 
 static bool
 generate_string(char **buf)
@@ -86,7 +90,10 @@ nvlist_t *
 generate_nvlist(unsigned int count)
 {
 	nvlist_t *nvl, *pvl;
-	unsigned int i, j;
+	unsigned int i;
+#ifdef ARRAY_SUPPORT
+	unsigned int j;
+#endif	/* ARRAY_SUPPORT */
 	enum nvtype t;
 	char *name;
 
@@ -155,6 +162,7 @@ generate_nvlist(unsigned int count)
 			free(buf);
 			break;
 		    }
+#ifdef ARRAY_SUPPORT
 		case NVLIST_BOOL_ARRAY:
 		    {
 			bool *buf;
@@ -260,6 +268,7 @@ generate_nvlist(unsigned int count)
 			i += size - 1 + done;
 			break;
 		    }
+#endif	/* ARRAY_SUPPORT */
 		default:
 			goto err;
 		}
