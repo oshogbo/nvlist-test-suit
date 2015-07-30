@@ -39,15 +39,19 @@ main(int argc, char **argv)
 	int ret;
 	size_t size;
 	FILE *pfile;
+	bool print;
 
 	ret = 1;
 	nvl = NULL;
 	buf = NULL;
 	pfile = NULL;
-	if (argc != 2) {
-		fprintf(stderr, "Usage: %s [filename]\n", argv[0]);
+	print = false;
+	if (argc != 2 && argc != 3) {
+		fprintf(stderr, "Usage: %s [filename] [print]\n", argv[0]);
 		return (1);
 	}
+	if (argc == 3 && strcmp(argv[2], "print"))
+		print = true;
 
 	pfile = fopen(argv[1], "r");
 	if (pfile == NULL) {
@@ -73,6 +77,8 @@ main(int argc, char **argv)
 	nvl = nvlist_unpack(buf, size, 0);
 	if (nvl == NULL || nvlist_error(nvl) != 0)
 		printf("Failed to unpack.\n");
+	if (print)
+		nvlist_fdump(nvl, stdout);
 
 	ret = 0;
 out:
