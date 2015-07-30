@@ -32,6 +32,9 @@
 #include <string.h>
 #include <time.h>
 #include <uuid.h>
+#include <math.h>
+
+#define MAX_ELEMENTS_ARRAY	16
 
 enum nvtype {
 	NVLIST_BOOL,
@@ -41,8 +44,28 @@ enum nvtype {
 	NVLIST_UP,
 	NVLIST_NULL,
 	NVLIST_BINARY,
+	NVLIST_BOOL_ARRAY,
+	NVLIST_NUMBER_ARRAY,
+	NVLIST_STRING_ARRAY,
+	NVLIST_NVLIST_ARRAY,
 	NVLIST_LAST
 };
+
+static size_t
+array_elements_count(int maxcount)
+{
+	int r;
+
+	if (maxcount < 0) {
+		abort();
+	}
+
+	r = rand() % (MAX_ELEMENTS_ARRAY - 1) + 1;
+
+	if (r > maxcount)
+		return (maxcount);
+	return (r);
+}
 
 static bool
 generate_string(char **buf)
@@ -52,7 +75,6 @@ generate_string(char **buf)
 
 	if (uuidgen(&store, 1) != 0)
 		return (false);
-
 	uuid_to_string(&store, buf, &status);
 	if (status != uuid_s_ok)
 		return (false);
@@ -64,7 +86,7 @@ nvlist_t *
 generate_nvlist(unsigned int count)
 {
 	nvlist_t *nvl, *pvl;
-	unsigned int i;
+	unsigned int i, j;
 	enum nvtype t;
 	char *name;
 
@@ -133,12 +155,119 @@ generate_nvlist(unsigned int count)
 			free(buf);
 			break;
 		    }
+		case NVLIST_BOOL_ARRAY:
+		    {
+			bool *buf;
+			size_t size;
+
+			if (i == count - 1) {
+				i--;
+				break;
+			}
+
+			size = array_elements_count(count - i);
+			buf = malloc(size);
+			if (buf == NULL)
+				goto err;
+			for (j = 0; j < size; j++)
+				buf[j] = rand() % 2;
+			nvlist_move_bool_array(pvl, name, buf, size);
+			i += size - 1;
+			break;
+		    }
+		case NVLIST_NUMBER_ARRAY:
+		    {
+			uint64_t *buf;
+			size_t size;
+
+			if (i == count - 1) {
+				i--;
+				break;
+			}
+
+			size = array_elements_count(count - i);
+			buf = malloc(size * sizeof(*buf));
+			if (buf == NULL)
+				goto err;
+			for (j = 0; j < size; j++)
+				buf[j] = rand();
+			nvlist_move_number_array(pvl, name, buf, size);
+			i += size - 1;
+			break;
+		    }
+		case NVLIST_STRING_ARRAY:
+		    {
+			char **buf;
+			size_t size;
+
+			if (i == count - 1) {
+				i--;
+				break;
+			}
+
+			size = array_elements_count(count - i);
+			buf = malloc(size * sizeof(*buf));
+			if (buf == NULL)
+				goto err;
+			for (j = 0; j < size; j++) {
+				if (!generate_string(&buf[j])) {
+					size_t k;
+
+					for (k = 0; k < j; k++)
+						free(buf[k]);
+					free(buf);
+					goto err;
+				}
+			}
+			nvlist_move_string_array(pvl, name, buf, size);
+			i += size - 1;
+			break;
+		    }
+		case NVLIST_NVLIST_ARRAY:
+		    {
+			nvlist_t **buf;
+			size_t size, childsize, done;
+
+			if (i == count - 1) {
+				i--;
+				break;
+			}
+
+			done = childsize = 0;
+			size = array_elements_count(count - i);
+			if (size == 0)
+				abort();
+			buf = malloc(size * sizeof(*buf));
+			if (buf == NULL)
+				goto err;
+			for (j = 0; j < size; j++) {
+				childsize = array_elements_count(count - i -
+				    done - size);
+				done += childsize;
+				buf[j] = generate_nvlist(childsize);
+				if (nvlist_error(buf[j]) != 0)
+					abort();
+				if (buf[j] == NULL) {
+					size_t k;
+
+					for (k = 0; k < j; k++)
+						nvlist_destroy(buf[k]);
+					free(buf);
+					goto err;
+				}
+			}
+			nvlist_move_nvlist_array(pvl, name, buf, size);
+			i += size - 1 + done;
+			break;
+		    }
 		default:
 			goto err;
 		}
 		free(name);
 		name = NULL;
 	}
+	if (i != count)
+		abort();
 
 	if (nvlist_error(nvl) != 0)
 		goto err;
