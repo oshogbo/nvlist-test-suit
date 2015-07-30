@@ -3,6 +3,7 @@
 #
 
 include make/pre_common.mk
+include make/nvlistfiles.mk
 
 PROGS=	packunpack
 PROGS+=	genafldata
@@ -12,7 +13,7 @@ PROGS+=	unpack
 
 all: ${PROGS}
 
-${PROGS}:
+${PROGS}: ${NVLISTOBJ}
 	$(MAKE) -f make/Makefile.$@ LIBNV=${LIBNV} INC=${INC}
 
 clean:
@@ -22,3 +23,9 @@ clean:
 allclean: clean
 	rm -fR aflresult/*
 	rm -f testdata/nvlist.*
+
+${OBJDIR}/%.o: ${LIBNV}/%.c
+	$(CC) -c $(CFLAGS) -o $@ $< -I${LIBNV} -I${LIBNVCONTRIB}
+
+${OBJDIR}/%.o: ${LIBNVCONTRIB}/%.c
+	$(CC) -c $(CFLAGS) -o $@ $< -I${LIBNV} -I${LIBNVCONTRIB}

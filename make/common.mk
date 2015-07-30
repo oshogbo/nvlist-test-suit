@@ -15,9 +15,3 @@ ${BINDIR}/$(TARGET): $(NVLISTOBJ) $(OBJ)
 
 ${OBJDIR}/%.o: ${SRCDIR}/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
-
-${OBJDIR}/%.o: ${LIBNV}/%.c
-	$(CC) -c $(CFLAGS) -o $@ $< -I${LIBNV} -I${LIBNVCONTRIB}
-
-${OBJDIR}/%.o: ${LIBNVCONTRIB}/%.c
-	$(CC) -c $(CFLAGS) -o $@ $< -I${LIBNV} -I${LIBNVCONTRIB}
