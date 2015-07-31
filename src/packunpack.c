@@ -62,6 +62,11 @@ main(int argc, char **argv)
 		abort();
 	}
 	newnvl = nvlist_unpack(buf, size, 0);
+	if (newnvl == NULL || nvlist_size(newnvl) != nvlist_size(nvl)) {
+		fprintf(stderr, "Unpack failed.\n");
+		nvlist_fdump(nvl, stdout);
+		abort();
+	}
 
 	pvl = nvl;
 	newpvl = newnvl;
@@ -214,8 +219,13 @@ main(int argc, char **argv)
 					fprintf(stderr, "Nvlist array check failed.\n");
 					abort();
 				}
+
 				pvl = val[0];
 				newpvl = newval[0];
+				if (pvl == NULL || newpvl == NULL) {
+					fprintf(stderr, "Nvlist array check failed.\n");
+					abort();
+				}
 				cookie = NULL;
 				newcookie = NULL;
 				break;
